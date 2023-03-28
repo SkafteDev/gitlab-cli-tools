@@ -7,7 +7,7 @@ def create_tree(root_node_name, subgroups):
     root = tree.create_node(identifier=root_node_name, data=root_node_name)
 
     for subgroup in subgroups:
-        n = tree.create_node(tag=subgroup, datga=subgroup, parent=root)
+        n = tree.create_node(tag=subgroup, data=subgroup, parent=root)
         for member in subgroups[subgroup]:
             tree.create_node(tag=member["name"], data=member, parent=n)
 
@@ -29,7 +29,7 @@ merged = {**subgroup_members, **project_members}
 print("----------------- Group and Project membership for all users for root group id {} -----------------".format(gitlab_root_group_id))
 create_tree(gitlab_url + "/" + gitlab_root_group_name, merged).show()
 
-username = "chcla15"
+username = "misc1"
 def filter_by_username(pair):
     key, value = pair
 
