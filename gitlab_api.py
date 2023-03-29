@@ -31,6 +31,25 @@ class GitLabAPI:
 
         return all_pages_content
 
+    def __init_member__(self, member_data):
+        username = member_data["username"]
+        name = member_data["name"]
+        access_level = AccessLevel(member_data["access_level"])
+        member = {
+            'username': username,
+            'name': name,
+            'access_level': AccessLevel(access_level)
+        }
+
+        return member
+
+    def get_group_information(self, gitlab_group_id):
+        group_information_url = "https://{}/api/v4/groups/{}?with_projects=false" \
+            .format(self.gitlab_url, gitlab_group_id)
+        response = self.session.get(group_information_url).json()
+
+        return response
+
     """Returns all projects for the given root group id. Including archived projects."""
     def get_all_projects(self, gitlab_root_group_id):
         all_projects_url = "https://{}/api/v4/groups/{}/projects?include_subgroups=true&per_page={}" \
@@ -61,16 +80,9 @@ class GitLabAPI:
                 .format(self.gitlab_url, subgroup_id, self.results_per_page)
             members = self.__traverse_pages__(all_members_url)
 
-            for member in members:
-                username = member["username"]
-                name = member["name"]
-                access_level = AccessLevel(member["access_level"])
-                user = {
-                    'username': username,
-                    'name': name,
-                    'access_level': AccessLevel(access_level)
-                }
-                out[subgroup_full_path].append(user)
+            for member_data in members:
+                member = self.__init_member__(member_data)
+                out[subgroup_full_path].append(member)
 
         return out
 
@@ -89,15 +101,17 @@ class GitLabAPI:
                 .format(self.gitlab_url, project_id, self.results_per_page)
             members = self.__traverse_pages__(all_members_url)
 
-            for member in members:
-                username = member["username"]
-                name = member["name"]
-                access_level = AccessLevel(member["access_level"])
-                user = {
-                    'username': username,
-                    'name': name,
-                    'access_level': AccessLevel(access_level)
-                }
-                out[path_with_namespace].append(user)
+            for member_data in members:
+                member = self.__init_member__(member_data)
+                out[path_with_namespace].append(member)
 
         return out
+
+    def get_all_project_and_subgroup_members(self, gitlab_root_group_id):
+        subgroup_members = self.get_all_subgroup_members(gitlab_root_group_id)
+        project_members = self.get_all_project_members(gitlab_root_group_id)
+
+        # Merges the dictionaries to form a combined report of memberships.
+        merged = {**subgroup_members, **project_members}
+
+        return merged
