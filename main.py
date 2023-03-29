@@ -1,4 +1,7 @@
 import sys
+# Sets encoding to support the characters used by treelib.
+sys.stdin.reconfigure(encoding='utf-8')
+sys.stdout.reconfigure(encoding='utf-8')
 
 from gitlab_api import GitLabAPI
 from treelib import Tree
