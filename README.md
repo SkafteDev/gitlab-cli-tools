@@ -10,7 +10,7 @@ Reports the whole project/subgroup structure with members and their permission l
 
 Example:
 ```sh
-python main.py --gitlab_access_token "xyz" --gitlab_host gitlab.example.com --gitlab_root_group_id 0000 --report full_permission_tree
+python reporting.py --gitlab_access_token "xyz" --gitlab_host gitlab.example.com --gitlab_root_group_id 0000 --report full_permission_tree
 
 ----------------- Group and Project membership for all users for root group id 0000 -----------------
 https://gitlab.example.com/groups/group-0
@@ -91,7 +91,7 @@ Reports the subset of the project/subgroup structure that contains permissions f
 Example:
 
 ```sh
-python main.py --gitlab_access_token "xyz" --gitlab_host gitlab.example.com --gitlab_root_group_id 0000 --report member_permission_tree --for_username user_i
+python reporting.py --gitlab_access_token "xyz" --gitlab_host gitlab.example.com --gitlab_root_group_id 0000 --report member_permission_tree --for_username user_i
 
 ----------------- Group and Project membership for user user_i starting at root group id 0000 -----------------
 https://gitlab.example.com/groups/group-0
